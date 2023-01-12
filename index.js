@@ -6,13 +6,13 @@ const PORT = process.env.PORT || 8000;
 
 const server = http.createServer(async (req, res) => {
   if (req.url === "/") {
-    const file = await fs.readFile('./public/home.html');
+    const file = await fs.readFile(path.join(__dirname, "public", "home.html"));
     res.writeHead(200, "Ok", { "Content-type": "text/html" });
     return res.end(file);
   }
 
   if (req.url === "/about") {
-    const file = await fs.readFile('./public/about.html');
+    const file = await fs.readFile(path.join(__dirname, "public", "about.html"));
     res.writeHead(200, "Ok", { "Content-type": "text/html" });
     return res.end(file);
   }
