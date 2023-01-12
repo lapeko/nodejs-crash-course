@@ -13,4 +13,13 @@ console.log(myUrl.host);
 console.log(myUrl.hostname);
 
 // Pathname
-console.log(myUrl.)
+console.log(myUrl.pathname);
+
+// Search params
+console.log(myUrl.search);
+
+// Search params
+myUrl.searchParams.append('test', '123');
+console.log(myUrl.searchParams);
+myUrl.searchParams.forEach((name, value) => console.log(name, value));
+// console.log(myUrl.searchParams.get('id'));
