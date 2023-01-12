@@ -5,25 +5,29 @@ const path = require('path');
 const PORT = process.env.PORT || 8000;
 
 const server = http.createServer(async (req, res) => {
-  if (req.url === "/") {
-    const file = await fs.readFile(path.join(__dirname, "public", "home.html"));
-    res.writeHead(200, "Ok", { "Content-type": "text/html" });
-    return res.end(file);
-  }
-
-  if (req.url === "/about") {
-    const file = await fs.readFile(path.join(__dirname, "public", "about.html"));
-    res.writeHead(200, "Ok", { "Content-type": "text/html" });
-    return res.end(file);
-  }
-
-  if (req.url === "/users") {
-    const users = [
-      { name: "Bob Pupkins", age: 25 },
-      { name: "Stiw Qwerty", age: 47 }
-    ];
-    res.writeHead(200, "Ok", { "Content-type": "application/json" });
-    res.end(JSON.stringify(users));
+  try {
+    const file = await fs.readFile(path.join(__dirname, "public", req.url === '/' ? "index.html" : req.url), { encoding: "utf-8" });
+    const extension = path.extname(req.url);
+    let contentType = "text/html";
+    switch (extension) {
+      case ".js": contentType = "text/javascript"; break;
+      case ".css": contentType = "text/css"; break;
+      case ".json": contentType = "application/json"; break;
+      case ".png": contentType = "image/png"; break;
+      case ".jpg": contentType = "image/jpg"; break;
+    }
+    res.writeHead(200, "Ok", { "Content-type": contentType })
+    res.end(file);
+  } catch (error) {
+    console.log(error);
+    if (error.code === "ENOENT") {
+      res.writeHead(404, "Not found", { "Content-type": "text/html" });
+      const file = await fs.readFile(path.join(__dirname, "public", "not-found.html"));
+      return res.end(file);
+    }
+    res.writeHead(500, "Server error", { "Content-type": "text/html" });
+    const file = await fs.readFile(path.join(__dirname, "public", "server-error.html"));
+    res.end(file);
   }
 });
 
