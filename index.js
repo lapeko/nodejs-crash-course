@@ -19,7 +19,6 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, "Ok", { "Content-type": contentType })
     res.end(file);
   } catch (error) {
-    console.log(error);
     if (error.code === "ENOENT") {
       res.writeHead(404, "Not found", { "Content-type": "text/html" });
       const file = await fs.readFile(path.join(__dirname, "public", "not-found.html"));
